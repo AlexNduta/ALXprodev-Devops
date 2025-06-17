@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+POKEMON=("Bulbasaur", "Ivysaur", "Venusaur", "Charmander", "Charmeleon")
+
+for x in ${POKEMON[@]}
+do
+    echo "$x"
+done
