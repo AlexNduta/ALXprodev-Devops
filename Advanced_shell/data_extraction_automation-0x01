@@ -4,10 +4,19 @@
 
 # configurations
 #iILE=$(cat . data.json)
+# extract the raw json object from the file 'data.json' without the quotation
 NAME=$(jq -r .name data.json)
-HEIGHT=$(jq -r .height data.json)
-WEIGHT=$(jq -r .weight data.json)
-TYPE=$(jq -r '.types |.[] | .type.name' data.json)
-#echo getting data from the data .json file
+# get the height, weight and type from
+# Note that the hesight is in decimetres, we divide by 10 to convert to meters
+HEIGHT=$(jq -r .height data.json | awk '{print $1 / 10}')
 
-echo "${NAME} is of type ${TYPE}, weighs ${WEIGHT}, and is ${HEIGHT} tall."
+#Note that the weight is in hectograms i.e divide by 10 to convert to kgs
+#we use awk arithimetics to convert to kg
+WEIGHT=$(jq -r .weight data.json| awk '{print $1 / 10}')  
+# the output gives two types, use sed to print the first type only
+TYPE=$(jq -r '.types |.[] | .type.name' data.json)
+TYPE1=$( echo "${TYPE}" | sed -n '1p')
+
+TEXT="${NAME} is of type ${TYPE1}, weighs ${WEIGHT}kg, and is ${HEIGHT}m tall."
+#echo getting data from the data .json file
+echo "${TEXT}"
