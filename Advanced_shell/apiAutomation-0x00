@@ -6,7 +6,7 @@
 
 # configuartion
 SUCCESS_FILE="data.json"
-ERROR_FILE="errors.log"
+ERROR_FILE="errors.txt"
 url="https://pokeapi.co/api/v2/pokemon/pikachu"
 
 
