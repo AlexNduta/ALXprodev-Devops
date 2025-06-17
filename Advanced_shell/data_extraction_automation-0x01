@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+# extract data from the file 'data.json' created by the 'apiAutomation-0x00' task
+
+# configurations
+#iILE=$(cat . data.json)
+NAME=$(jq -r .name data.json)
+HEIGHT=$(jq -r .height data.json)
+WEIGHT=$(jq -r .weight data.json)
+TYPE=$(jq -r '.types |.[] | .type.name' data.json)
+#echo getting data from the data .json file
+
+echo "${NAME} is of type ${TYPE}, weighs ${WEIGHT}, and is ${HEIGHT} tall."
