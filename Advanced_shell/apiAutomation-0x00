@@ -5,7 +5,7 @@
 #  if the request fails, it should log the error to an error file: error.txt
 
 # configuartion
-POKEMON_NAME="kakuna"
+POKEMON_NAME="pikachu"
 SUCCESS_FILE="data.json"
 ERROR_FILE="errors.txt"
 url="https://pokeapi.co/api/v2/pokemon/${POKEMON_NAME}"
@@ -21,7 +21,7 @@ http_status=$(curl -s -I "${url}" | sed -n '1p' | awk '{print $2}')
 if [ "$http_status" -eq 200 ]
 then 
     echo "success, the status code is 200"
-    curl  -s "${url}"| jq . >> "${SUCCESS_FILE}"
+    curl  -s "${url}"| jq . > "${SUCCESS_FILE}"
     echo "data saved to the ${SUCCESS_FILE}"
 else 
     echo "Unsuccessful: The status code is ${http_status}"
