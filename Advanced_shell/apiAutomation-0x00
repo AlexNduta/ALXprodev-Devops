@@ -1,0 +1,29 @@
+#!/usr/bin/bash
+
+# This is a file to make a  request to the pokemonAPI and retrieves data for a specific Pokenmon pikachu
+# should save the response to a json file: data.json
+#  if the request fails, it should log the error to an error file: error.txt
+
+# configuartion
+SUCCESS_FILE="data.json"
+ERROR_FILE="error.log"
+url="https://pokeapi.co/api/v2/pokemon/pikachu"
+
+
+#http_status=$(curl -s -o /dev/null -w "%{http_code}" https://pokeapi.co/api/v2/pokemon/pikachu )
+echo "Getting the status code of the API"
+# do adilent curl to the URL
+# use sed to print the first line
+# use awk to print the second column which is the status code
+http_status=$(curl -s -I "${url}" | sed -n '1p' | awk '{print $2}')
+
+if [ "$http_status" -eq 200 ]
+then 
+    echo "success, the status code is 200"
+    curl  -s "${url}" > "{SUCCESS_FILE}"
+    echo "data saved to the ${SUCCESS_FILE}"
+else 
+    echo "Unsuccessful: The status code is ${http_status}"
+    echo "API request failed on $(date) with the error code $(http_status)" >> "${ERROR_FILE}"
+    echo "error detail logged in ${ERROR_FILE}"
+fi
