@@ -17,12 +17,24 @@ do
     NAME=$(jq -r '.name' pokemon_data/"${pokemon_data}".json)
     HEIGHT=$(jq -r '.height' pokemon_data/"${pokemon_data}".json | awk {'print $1 / 10'})
     WEIGHT=$(jq -r '.weight' pokemon_data/"${pokemon_data}".json | awk {'print $1 / 10'})
-    echo "${NAME}, ${HEIGHT}, ${WEIGHT}" >> pokemon_report.csv
+    echo "${NAME},${HEIGHT},${WEIGHT}" >> pokemon_report.csv
     # calculate the average wight and height
     AVG_HEIGHT=$(echo "${HEIGHT}"| awk '{s+=$2} END {print s / 5}')
     AVG_WEIGHT=$(echo "${WEIGHT}"| awk '{s+=$3} END {print s / 5}')
 done
-    #AVG_HEIGHT=$(echo "${HEIGHT}"| awk '{s+=$2} END {print s / 5}')
-    #AVG_WEIGHT=$(echo "${WEIGHT}"| awk '{s+=$3} END {print s / 5}')
-    echo "Average Height:${AVG_HEIGHT}" >> pokemon_report.csv
-    echo "Average weight:${AVG_WEIGHT}" >> pokemon_report.csv
+
+awk -F, '
+ NR > 1{
+    total_height += $2
+    total_weight += $3
+
+    count++
+} END {
+    if (count > 0) {
+        avg_height = total_height / count
+        avg_weight = total_weight / count
+
+        printf "\n Average height: %.2f m\n", avg_height
+        printf "\n Average weight: %.2f kg\n", avg_weight
+    }
+}' pokemon_report.csv >> pokemon_report.csv
