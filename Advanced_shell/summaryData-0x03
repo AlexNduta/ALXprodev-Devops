@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+# read data of each pokemon and extract the 'name', 'weight', 'height' of each pokemon
+# create csv containing the pokemon name, weight and height
+# use awk to calculate the average of weight and heigt
+
+
+#configuration
+POKEMON_LIST=("bulbasaur" "ivysaur" "venusaur" "charmander" "charmeleon")
+#NAME=$(jq -r '.name' pokemon_data/"${POKEMON_LIST}".json)
+#HEIGHT=$(jq -r '.height' pokemon_data/"${POKEMON_LIST}".json | awk {'print $1 / 10'})
+#WEIGHT=$(jq -r '.weight' pokemon_data/"${POKEMON_LIST}".json | awk {'print $1 / 10'})
+
+
+echo "Name, Height(m), Weight(kg)"  > pokemon_report.csv
+for pokemon_data in ${POKEMON_LIST[@]}
+do
+    NAME=$(jq -r '.name' pokemon_data/"${pokemon_data}".json)
+    HEIGHT=$(jq -r '.height' pokemon_data/"${pokemon_data}".json | awk {'print $1 / 10'})
+    WEIGHT=$(jq -r '.weight' pokemon_data/"${pokemon_data}".json | awk {'print $1 / 10'})
+    echo "${NAME}, ${HEIGHT}, ${WEIGHT}" >> pokemon_report.csv
+    # calculate the average wight and height
+    AVG_HEIGHT=$(echo "${HEIGHT}"| awk '{s+=$2} END {print s / 5}')
+    AVG_WEIGHT=$(echo "${WEIGHT}"| awk '{s+=$3} END {print s / 5}')
+done
+    #AVG_HEIGHT=$(echo "${HEIGHT}"| awk '{s+=$2} END {print s / 5}')
+    #AVG_WEIGHT=$(echo "${WEIGHT}"| awk '{s+=$3} END {print s / 5}')
+    echo "Average Height:${AVG_HEIGHT}" >> pokemon_report.csv
+    echo "Average weight:${AVG_WEIGHT}" >> pokemon_report.csv

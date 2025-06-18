@@ -15,7 +15,7 @@ then
     for pokemon in "${POKEMONS_LIST[@]}";
     do
         echo "Successful request: processing request for ${pokemon}"
-        curl -s "https://pokeapi.co/api/v2/pokemon/${pokemon}| jq ." > pokemon_data/"${pokemon}".json
+        curl -s "https://pokeapi.co/api/v2/pokemon/${pokemon}"| jq > pokemon_data/"${pokemon}".json
         sleep 1
     done
 else 
