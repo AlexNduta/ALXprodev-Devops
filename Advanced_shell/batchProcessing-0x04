@@ -1,0 +1,38 @@
+#!/usr/bin/bash
+# get data from a specific pokemon on the list and save the data in their specific file
+# Handle potential issues and invalid pokemon names
+# if an API fails, retry 3 times before logginf the error
+
+# configuration
+POKEMONS_LIST=("bulbasaur" "ivysaur" "benusaur" "charmander" "charmeleon")
+
+
+# get the HTTP status to determine if the request was succesful or not
+
+mkdir -p pokemon_datia_
+success=false
+
+
+for pokemon in ${POKEMONS_LIST[@]};
+do
+    echo "getting data for ${pokemon}"
+    output_file="${pokemon}."json
+    count=0
+    maxcount=3
+    while [ "$count" -lt $maxcount ];
+    do
+        if curl -s -f "https://pokeapi.co/api/v2/pokemon/${pokemon}" | jq > pokemon_datia_/"${output_file}"; then
+            success=true
+            ((count++))
+            echo "Saved1 the request to ${output_file}"
+            break
+        else
+            echo "Attemp ${count} failed, retrying in 2 second..." 
+            sleep 2
+        fi
+     done
+    if [ "${success}" = false ]; then
+    echo "ERROR: Could not retrieve data for ${pokemon}, after ${maxcount} "
+    echo "$(date) : Al attemptes failed for ${pokemon} " >> error_log.txt
+    fi
+done
